@@ -1,0 +1,106 @@
+body {
+  display: flex;
+  justify-content: center;
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.wrapper {
+  border: solid palevioletred 1px;
+  width: 400px;
+  padding: 5px;
+  margin-top: 60px;
+}
+
+.column_wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* border: solid red 1px; */
+  gap: 6px;
+}
+
+.numbers button {
+  border: solid 1px grey;
+  text-align: center;
+  padding: 30px;
+  cursor: pointer;
+  background-color: whitesmoke;
+}
+
+.numbers .zero {
+  border: solid 1px grey;
+  grid-column: 1/3;
+}
+
+.numbers button:active {
+  background-color: rgb(183, 127, 236);
+}
+
+.other_buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.other_buttons button {
+  border: solid 1px grey;
+  text-align: center;
+  padding: 30px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  background-color: blueviolet;
+}
+
+.screen {
+  border: solid 1px black;
+  height: 70px;
+  text-align: right;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-bottom: 5px;
+  padding: 5px;
+  font-weight: 600;
+  font-size: xx-large;
+  overflow-x: auto;
+}
+
+.left_column {
+  width: 300px;
+}
+
+.left_column button {
+  font-weight: 600;
+  font-size: x-large;
+}
+
+.right_column {
+  display: grid;
+  gap: 6px;
+  width: 95px;
+}
+
+.right_column button {
+  text-align: center;
+  border: solid 1px black;
+  padding: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: x-large;
+  background-color: black;
+  color: white;
+}
+
+.right_column button:active {
+  background-color: blueviolet;
+}
+
+.test {
+  background-color: red;
+}
