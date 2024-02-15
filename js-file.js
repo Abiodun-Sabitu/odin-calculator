@@ -1,50 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Calculator</title>
-    <script src="js-file.js" defer></script>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="wrapper">
-      <div class="screen">0</div>
-      <div class="column_wrapper">
-        <div class="left_column">
-          <div class="other_buttons">
-            <button class="clear">C</button>
-            <button class="toggle_num_type">+/-</button>
-            <button class="percentage">%</button>
-          </div>
-          <div class="numbers">
-            <button class="number">7</button>
-            <button class="number">8</button>
-            <button class="number">9</button>
-            <button class="number">4</button>
-            <button class="number">5</button>
-            <button class="number">6</button>
-            <button class="number">1</button>
-            <button class="number">2</button>
-            <button class="number">3</button>
-            <button class="zero number">0</button>
-            <button class="decimal">.</button>
-          </div>
-        </div>
-        <div class="right_column">
-          <button class="operation">/</button>
-          <button class="operation">*</button>
-          <button class="operation">-</button>
-          <button class="operation">+</button>
-          <button class="equals_to">=</button>
-        </div>
-      </div>
-    </div>
-  </body>
-</html>
+// The main variables
+
+let currentInputs = "";
+let secondInputs = "";
+let previousInputs = "";
+let operator = null;
+let calculationCompleted = false;
+
+let screen = document.querySelector(".screen");
+let btnNumbers = document.querySelectorAll(".number");
+let clearBtn = document.querySelector(".clear");
+let percentageBtn = document.querySelector(".percentage");
+let toggleBtn = document.querySelector(".toggle_num_type");
+let operation = document.querySelectorAll(".operation");
+let equalsTo = document.querySelector(".equals_to");
+let decimalBtn = document.querySelector(".decimal");
+
+// console.log(btnNumbers);
+// console.log(operation);
+
+// update screen content
+const updateScreen = () => {
+  screen.textContent = currentInputs;
+};
+
+//percentage
+percentageBtn.addEventListener("click", () => {
+  screen.textContent = screen.textContent / 100;
+});
+
+const makeNegativeOrPositiveNumber = () => {
+  // Parse the current screen content as a float
+  let currentValue = parseFloat(screen.textContent);
+
+  // Negate the value
+  currentValue = -currentValue;
+
+  // Update the screen and currentInputs with the new value
+  screen.textContent = currentValue.toString();
+  currentInputs = currentValue.toString(); // Ensure currentInputs reflects the change
+};
+
+toggleBtn.addEventListener("click", makeNegativeOrPositiveNumber);
+
+// clear screen content
+clearBtn.addEventListener("click", () => {
+  screen.textContent = 0;
+  currentInputs = "";
+  previousInputs = "";
+  operator = null;
+  decimalBtn.disabled = false;
+  calculationCompleted = false;
+});
+
+//update screen content for currentInputs
+btnNumbers.forEach((btnNumber) => {
+  btnNumber.addEventListener("click", () => {
+    if (calculationCompleted) {
+      currentInputs = ""; // Clear the current input if coming off a calculation
+      calculationCompleted = false; // Reset the flag
+    }
+    currentInputs += btnNumber.textContent;
+    updateScreen();
+  });
+});
+
+decimalBtn.addEventListener("click", () => {
+  if (!currentInputs.includes(".")) {
+    currentInputs += ".";
+    updateScreen();
+    decimalBtn.disabled = true;
+  }
+});
+
+// reinitialize previousInputs and reset firstInput when an Operator is clicked
+operation.forEach((operation) => {
+  operation.addEventListener("click", () => {
+    if (currentInputs !== "" && previousInputs !== "" && operator) {
+      currentInputs = String(operate(previousInputs, currentInputs, operator));
+      updateScreen();
+      operator = operation.textContent;
+      previousInputs = currentInputs;
+      currentInputs = "";
+      decimalBtn.disabled = false;
+    } else if (currentInputs !== "") {
+      operator = operation.textContent;
+      previousInputs = currentInputs;
+      currentInputs = "";
+      decimalBtn.disabled = false;
+    }
+  });
+});
+
+// the main calculations
+const operate = (a, b, arithmeticSign) => {
+  a = parseFloat(a);
+  b = parseFloat(b);
+  switch (arithmeticSign) {
+    case "+":
+      return a + b;
+    case "-":
+      return a - b;
+    case "*":
+      return a * b;
+    case "/":
+      return b !== 0 ? a / b : "Cannot divide by zero";
+    default:
+      return 0;
+  }
+};
+
+const totals = () => {
+  if (currentInputs !== "" && previousInputs !== "" && operator) {
+    // currentInputs = operate(previousInputs, currentInputs, operator);
+    const result = operate(previousInputs, currentInputs, operator);
+    currentInputs = String(result);
+    updateScreen();
+    operator = null;
+    previousInputs = "";
+    calculationCompleted = true;
+  }
+};
+
+equalsTo.addEventListener("click", () => {
+  totals();
+});
